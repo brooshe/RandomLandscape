@@ -15,6 +15,11 @@
 			"Name": "ProceduralTerrainGenerator",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/2e707e78b69540aeb7464b7c4e0e9c7b"
+		},
+		{
+			"Name": "VoxelPro",
+			"Enabled": false,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/b08e5581837e4bbca486b61cdf2751bb"
 		}
 	]
 }

@@ -1,0 +1,12 @@
+/Script
+/DerivedDataCache
+/Intermediate
+/Output
+/Saved
+/.idea
+/.vs
+/Binaries
+/Build
+/Plugins/ProceduralTerrainGenerator/Intermediate
+/Plugins/ProceduralTerrainGenerator/Binaries
+/*.sln

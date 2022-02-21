@@ -1,0 +1,73 @@
+{
+	"FileVersion": 3,
+	"Version": 7,
+	"VersionName": "2.0.1",
+	"FriendlyName": "ProceduralTerrainGenerator",
+	"Description": "Easy and lightweight plugin for procedural terrain generation within the editor, using your own assets.",
+	"Category": "Code Plugins",
+	"CreatedBy": "Víctor Hernández Molpeceres (Rockam)",
+	"CreatedByURL": "https://www.unrealengine.com/marketplace/en-US/profile/Rockam",
+	"DocsURL": "https://drive.google.com/file/d/1Pvt5R2dNisqAcojoBX736JU7QWA6kjVi/view",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/2e707e78b69540aeb7464b7c4e0e9c7b",
+	"SupportURL": "norlun5@gmail.com",
+	"EngineVersion": "4.27.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "RuntimeMeshComponent",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"HoloLens",
+				"Linux",
+				"LinuxAArch64",
+				"PS4",
+				"Switch",
+				"Android"
+			]
+		},
+		{
+			"Name": "FastNoiseLite",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"HoloLens",
+				"Linux",
+				"LinuxAArch64",
+				"PS4",
+				"Switch",
+				"Android"
+			]
+		},
+		{
+			"Name": "ProceduralTerrainGenerator",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"HoloLens",
+				"Linux",
+				"LinuxAArch64",
+				"PS4",
+				"Switch",
+				"Android"
+			]
+		},
+		{
+			"Name": "ProceduralTerrainGeneratorEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"HoloLens",
+				"Linux",
+				"LinuxAArch64",
+				"PS4",
+				"Switch"
+			]
+		}
+	]
+}
