@@ -10,3 +10,4 @@
 /Plugins/ProceduralTerrainGenerator/Intermediate
 /Plugins/ProceduralTerrainGenerator/Binaries
 /*.sln
+*.xcworkspace
