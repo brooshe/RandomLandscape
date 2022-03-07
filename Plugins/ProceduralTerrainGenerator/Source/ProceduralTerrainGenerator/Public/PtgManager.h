@@ -399,6 +399,10 @@ public:
 	/** Called when this actor is explicitly being destroyed during gameplay or in the editor, not called during level streaming or gameplay ending */
 	virtual void Destroyed() override;
 
+	
+	UFUNCTION(BlueprintCallable, CallInEditor, Category = "Editor Function")
+	void PlaceTerrain();
+
 	/** Regenerates the terrain, water, nature and actors using the seeds configured in the manager. */
 	UFUNCTION(BlueprintCallable, CallInEditor, Category = "PTG 1 - General actions")
 	void GenerateEverything();
