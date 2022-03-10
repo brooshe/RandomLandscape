@@ -1,0 +1,4 @@
+Plugins/WorldScape/Content/Ressources/Textures/Sand/T_Sand_Far_C.uasset filter=lfs diff=lfs merge=lfs -text
+Plugins/WorldScape/Content/Ressources/Textures/Sand/T_Sand_Far_N.uasset filter=lfs diff=lfs merge=lfs -text
+Plugins/WorldScape/Content/Ressources/Textures/Sand/T_Sand_Far_ORMH.uasset filter=lfs diff=lfs merge=lfs -text
+Plugins/WorldScape/Content/Ressources/HeightMapVolumeData.uasset filter=lfs diff=lfs merge=lfs -text
