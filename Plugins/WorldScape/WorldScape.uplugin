@@ -20,11 +20,10 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win64",
+                "Mac",
 				"Android"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
-				"IOS"
 			]
 		},
 		{
@@ -32,10 +31,10 @@
 			"Type": "Editor",
 			"LoadingPhase": "PreDefault",
 			"WhitelistPlatforms": [
-				"Win64"
+				"Win64",
+                "Mac"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
 				"IOS",
 				"Android"
 			]
@@ -46,11 +45,10 @@
 			"LoadingPhase": "PreDefault",
 			"WhitelistPlatforms": [
 				"Win64",
+                "Mac",
 				"Android"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
-				"IOS"
 			]
 		},
 		{
@@ -59,11 +57,10 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win64",
+                "Mac",
 				"Android"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
-				"IOS"
 			]
 		},
 		{
@@ -72,11 +69,10 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win64",
+                "Mac",
 				"Android"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
-				"IOS"
 			]
 		},
 		{
@@ -85,11 +81,11 @@
 			"LoadingPhase": "Default",
 			"WhitelistPlatforms": [
 				"Win64",
+                "Mac",
 				"Android"
 			],
 			"BlacklistPlatforms": [
-				"Mac",
-				"IOS"
+
 			]
 		}
 	],
