@@ -1,0 +1,106 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "2.0",
+	"FriendlyName": "WorldScape",
+	"Description": "Create a planet or infinite flat landscape using geometry clipmaps",
+	"Category": "Terrain",
+	"CreatedBy": "IolaCorp",
+	"CreatedByURL": "",
+	"DocsURL": "https://qanga.gitbook.io/worldscape-plugin/",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/1325c95bf60546738a5bb21e2262914d",
+	"SupportURL": "https://discord.gg/eWuFnPcskQ",
+	"EngineVersion": "4.27.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "WorldScapeCore",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Android"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS"
+			]
+		},
+		{
+			"Name": "WorldScapeEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PreDefault",
+			"WhitelistPlatforms": [
+				"Win64"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS",
+				"Android"
+			]
+		},
+		{
+			"Name": "WorldScapeFactory",
+			"Type": "Editor",
+			"LoadingPhase": "PreDefault",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Android"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS"
+			]
+		},
+		{
+			"Name": "WorldScapeNoise",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Android"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS"
+			]
+		},
+		{
+			"Name": "WorldScapeCommon",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Android"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS"
+			]
+		},
+		{
+			"Name": "WorldScapeVolume",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Android"
+			],
+			"BlacklistPlatforms": [
+				"Mac",
+				"IOS"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "Niagara",
+			"Enabled": true
+		},
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
+		}
+	]
+}
