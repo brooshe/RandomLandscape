@@ -227,6 +227,10 @@ public:
 	EWorldScapeType GenerationType;
 	//InCose Used bool
 	bool bFlatWorld;
+
+	//Size of FlatWorld, 0 means infinite.
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", meta = (EditCondition = "GenerationType == EWorldScapeType::Flat"))
+	int32 WorldSize;
 	
 
 	//Start or stop planet generation, when disabled, the planet is destroyed

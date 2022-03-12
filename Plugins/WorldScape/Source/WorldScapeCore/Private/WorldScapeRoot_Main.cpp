@@ -316,7 +316,7 @@ void AWorldScapeRoot::CleanComponents() {
 
 	if (GenerationType == EWorldScapeType::Flat) 
 	{
-		PlanetScaleCode = 637817792;
+		PlanetScaleCode = 637817792 * 0.5;
 		bFlatWorld = true;
 	}
 	else 

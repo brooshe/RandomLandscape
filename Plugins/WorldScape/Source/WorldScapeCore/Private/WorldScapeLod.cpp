@@ -40,8 +40,10 @@ void UWorldScapeLod::Init(int pLod,int TriResolution, double Size, DVector pRela
 	
 
 	FVector SurfaceNormal = RelativePosition.ToFVector();
-
-	SurfaceNormal.Normalize();
+	if (SurfaceNormal.IsNearlyZero())
+		SurfaceNormal = FVector::UpVector;
+	else
+		SurfaceNormal.Normalize();
 
 	FVector Tangent = FVector::CrossProduct(SurfaceNormal, FVector::RightVector);
 
