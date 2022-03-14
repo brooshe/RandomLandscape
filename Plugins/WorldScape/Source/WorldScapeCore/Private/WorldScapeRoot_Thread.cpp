@@ -328,10 +328,6 @@ void LodGenerationThread::CalculateNormal(LodData& PatchData, int32 PatchID)
 
 void LodGenerationThread::SetPointPosition()
 {
-
-
-
-
 	DVector Normal = HardenNormal;
 	
 	Normal.SnapNormal(RootRef->GridAngle);
@@ -339,21 +335,14 @@ void LodGenerationThread::SetPointPosition()
 
 	bool WaterBody = false;
 
-	
-
-
 	float uvSpacing = 1.0f / (float)TriResolution;
 	double StepSize = (double)Size * pow(2, Lod);
-
 	
 	DVector Tangent = DVector::CrossProduct(Normal, DVector(0, 0, 1));
 	DVector BiTangent = DVector::CrossProduct(Normal, Tangent);
 
 	Tangent.Normalize();
 	BiTangent.Normalize();
-
-
-
 
 	double OffsetX = StepSize * 0.5;
 	double OffsetY = StepSize * 0.5;
@@ -365,7 +354,6 @@ void LodGenerationThread::SetPointPosition()
 		Tangent = FVector(1, 0, 0);
 		BiTangent = FVector(0, 1, 0);
 	}
-
 	else if (abs(Normal.Z) > 0.9) 
 	{
 		Tangent = FVector(1,0,0);
@@ -376,9 +364,6 @@ void LodGenerationThread::SetPointPosition()
 		}
 	}
 
-
-	
-
 	//DVector Center = FVector(WorldPosition.X, WorldPosition.Y, PlanetScaleCode);
 
 	DVector X, Y;
@@ -386,7 +371,6 @@ void LodGenerationThread::SetPointPosition()
 
 	//double stepSize = (double)Size * pow(2, Lod);
 	double HalfSize = (Size * pow(2, Lod) ) * (TriResolution-1)*0.5;
-
 
 	/*
 	UE_LOG(LogWorldScapeCore, Log, TEXT("Planet Scale : %f"), (float)PlanetScaleCode);
@@ -402,18 +386,15 @@ void LodGenerationThread::SetPointPosition()
 	int32 MaxBorderY;
 	int32 MaxBorderX;
 
-
 	if (SubPosition.X < 0.5f) 
 	{
 		MinBorderX = 0;
 		MaxBorderX = TriResolution - 2;
-
 	}
 	else 
 	{
 		MinBorderX = -1;
 		MaxBorderX = TriResolution - 3;
-
 	}
 	if (SubPosition.Y < 0.5f) 
 	{
@@ -426,10 +407,23 @@ void LodGenerationThread::SetPointPosition()
 		MaxBorderY = TriResolution - 3;
 	}
 
+	int32 WorldMinX, WorldMinY;
+	int32 WorldMaxX, WorldMaxY;
+	WorldMinX = WorldMinY = -65536;
+	WorldMaxX = WorldMaxY = 65536;
+	if (bFlatWorld && RootRef->WorldSize > 0)
+	{
+		WorldMinX = floor((-RootRef->WorldSize*0.5f + HalfSize - OffsetX - RelativePosition.X) / StepSize);
+		WorldMinY = floor((-RootRef->WorldSize*0.5f + HalfSize - OffsetY - RelativePosition.Y) / StepSize);
+		WorldMaxX = ceil((RootRef->WorldSize*0.5f + HalfSize - OffsetX - RelativePosition.X) / StepSize);
+		WorldMaxY = ceil((RootRef->WorldSize*0.5f + HalfSize - OffsetY - RelativePosition.Y) / StepSize);
+		// UE_LOG(LogTemp, Warning, TEXT("SetpointPosition   WorldSize:%i  RelativePosition:%s  StepSize:%f, WorldMinX:%i  WorldMinY:%i  WorldMaxX:%i   WorldMaxY:%i"), RootRef->WorldSize, *RelativePosition.ToString(), StepSize, WorldMinX, WorldMinY, WorldMaxX, WorldMaxY);
+	}
+
 	if (Lod == 0) 
 	{
 		ProcessVertices(MainPatch, 0, 0, TriResolution - 2, TriResolution - 2, Tangent, BiTangent, StepSize, HalfSize, uvSpacing, SubPosition,
-			MinBorderY, MinBorderX, MaxBorderY, MaxBorderX,OffsetX,OffsetY, InvertOrder,PlanetScaleCode, RelativePosition, bFlatWorld);
+			MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, WorldMinY, WorldMinX, WorldMaxY, WorldMaxX, OffsetX,OffsetY, InvertOrder,PlanetScaleCode, RelativePosition, bFlatWorld);
 	}
 	else 
 	{
@@ -470,10 +464,9 @@ void LodGenerationThread::SetPointPosition()
 			}
 
 			ProcessVertices(MainPatch, MinY, MinX, MaxY, MaxX, Tangent, BiTangent, StepSize, HalfSize, uvSpacing, SubPosition,
-				MinBorderY, MinBorderX, MaxBorderY, MaxBorderX,OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
+				MinBorderY, MinBorderX, MaxBorderY, MaxBorderX,WorldMinY, WorldMinX, WorldMaxY, WorldMaxX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
 		}
 	}
-	
 
 	if (SubPosition.X < 0.5f) 
 	{
@@ -498,7 +491,7 @@ void LodGenerationThread::SetPointPosition()
 	}
 
 	ProcessVertices(PatchA, MinY, MinX, MaxY, MaxX, Tangent, BiTangent, StepSize, HalfSize, uvSpacing, SubPosition,
-		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
+		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, WorldMinY, WorldMinX, WorldMaxY, WorldMaxX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
 
 	if (SubPosition.Y < 0.5f) 
 	{
@@ -515,7 +508,7 @@ void LodGenerationThread::SetPointPosition()
 	MaxX = TriResolution - 2;
 
 	ProcessVertices(PatchB, MinY, MinX, MaxY, MaxX, Tangent, BiTangent, StepSize, HalfSize, uvSpacing, SubPosition, 
-		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
+		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, WorldMinY, WorldMinX, WorldMaxY, WorldMaxX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld);
 }
 
 void LodGenerationThread::DoWork() 

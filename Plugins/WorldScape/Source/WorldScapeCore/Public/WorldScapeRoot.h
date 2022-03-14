@@ -45,61 +45,62 @@ enum class EWorldScapeType : uint8
 };
 
 static void ProcessVertices(LodData& Data, int32 MinY, int32 MinX, int32 MaxY, int32 MaxX, DVector Tangent, DVector BiTangent, double StepSize, double HalfSize, double uvSpacing,
-	FVector2D SubPosition, int32 MinBorderY, int32 MinBorderX, int32 MaxBorderY, int32 MaxBorderX, double OffsetX, double OffsetY, bool InvertOrder, double PlanetScaleCode,
-	DVector PPos, bool FlatWorld, bool DealSewing = true)
+	FVector2D SubPosition, int32 MinBorderY, int32 MinBorderX, int32 MaxBorderY, int32 MaxBorderX, int32 MinWorldY, int32 MinWorldX, int32 MaxWorldY, int32 MaxWorldX,
+	double OffsetX, double OffsetY, bool InvertOrder, double PlanetScaleCode, DVector PPos, bool FlatWorld, bool DealSewing = true)
 {
 	DVector X, Y;
 	DVector PositionNormal;
 	bool doSewing = false;
 
-
+	int32 _x, _y;
 
 	if (InvertOrder)
 	{
 		for (int32 y = MinY; y < MaxY; y++)
 		{
+			_y = FMath::Clamp(y, MinWorldY, MaxWorldY);
 			for (int32 x = MaxX - 1; x >= MinX; x--)
 			{
-
+				_x = FMath::Clamp(x, MinWorldX, MaxWorldX);
 				if (DealSewing)
 				{
 
-					doSewing = (bool)(y % 2);
+					doSewing = (bool)(_y % 2);
 					if (SubPosition.Y > 0.5) doSewing = !doSewing;
 
-					if (x == MinBorderX && doSewing)
+					if (_x == MinBorderX && doSewing)
 					{
-						Y = BiTangent * ((y + 1) * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * ((_y + 1) * StepSize - HalfSize + OffsetY);
 					}
-					else if (x == MaxBorderX && doSewing)
+					else if (_x == MaxBorderX && doSewing)
 					{
-						Y = BiTangent * ((y - 1) * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * ((_y - 1) * StepSize - HalfSize + OffsetY);
 					}
 					else
 					{
-						Y = BiTangent * (y * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * (_y * StepSize - HalfSize + OffsetY);
 					}
 
-					doSewing = (bool)(x % 2);
+					doSewing = (bool)(_x % 2);
 					if (SubPosition.X > 0.5) doSewing = !doSewing;
 
-					if (y == MinBorderY && doSewing)
+					if (_y == MinBorderY && doSewing)
 					{
-						X = Tangent * ((x + 1) * StepSize - HalfSize + OffsetX);
+						X = Tangent * ((_x + 1) * StepSize - HalfSize + OffsetX);
 					}
-					else if (y == MaxBorderY && doSewing)
+					else if (_y == MaxBorderY && doSewing)
 					{
-						X = Tangent * ((x - 1) * StepSize - HalfSize + OffsetX);
+						X = Tangent * ((_x - 1) * StepSize - HalfSize + OffsetX);
 					}
 					else
 					{
-						X = Tangent * (x * StepSize - HalfSize + OffsetX);
+						X = Tangent * (_x * StepSize - HalfSize + OffsetX);
 					}
 				}
 				else
 				{
-					Y = BiTangent * (y * StepSize - HalfSize + OffsetY);
-					X = Tangent * (x * StepSize - HalfSize + OffsetX);
+					Y = BiTangent * (_y * StepSize - HalfSize + OffsetY);
+					X = Tangent * (_x * StepSize - HalfSize + OffsetX);
 				}
 
 				if (FlatWorld)
@@ -116,7 +117,7 @@ static void ProcessVertices(LodData& Data, int32 MinY, int32 MinX, int32 MaxY, i
 				}
 
 				Data.Normals.Add(FVector(0.0f, 0.0f, 1.0f));
-				Data.UV.Add(FVector2D((x + (int32)SubPosition.X) * uvSpacing, (y + (int32)SubPosition.Y) * uvSpacing));
+				Data.UV.Add(FVector2D((_x + (int32)SubPosition.X) * uvSpacing, (_y + (int32)SubPosition.Y) * uvSpacing));
 				Data.Tangents.Add(FWorldScapeMeshTangent(Tangent.X, Tangent.Y, Tangent.Z));
 			}
 		}
@@ -125,51 +126,52 @@ static void ProcessVertices(LodData& Data, int32 MinY, int32 MinX, int32 MaxY, i
 	{
 		for (int32 y = MinY; y < MaxY; y++)
 		{
+			_y = FMath::Clamp(y, MinWorldY, MaxWorldY);
 			for (int32 x = MinX; x < MaxX; x++)
 			{
-				if (DealSewing) {
-
-					doSewing = (bool)(y % 2);
+				_x = FMath::Clamp(x, MinWorldX, MaxWorldX);
+				if (DealSewing)
+				{
+					doSewing = (bool)(_y % 2);
 					if (SubPosition.Y > 0.5) doSewing = !doSewing;
 
-					if (x == MinBorderX && doSewing)
+					if (_x == MinBorderX && doSewing)
 					{
-						Y = BiTangent * ((y + 1) * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * ((_y + 1) * StepSize - HalfSize + OffsetY);
 					}
-					else if (x == MaxBorderX && doSewing)
+					else if (_x == MaxBorderX && doSewing)
 					{
-						Y = BiTangent * ((y - 1) * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * ((_y - 1) * StepSize - HalfSize + OffsetY);
 					}
 					else
 					{
-						Y = BiTangent * (y * StepSize - HalfSize + OffsetY);
+						Y = BiTangent * (_y * StepSize - HalfSize + OffsetY);
 					}
 
-					doSewing = (bool)(x % 2);
+					doSewing = (bool)(_x % 2);
 					if (SubPosition.X > 0.5) doSewing = !doSewing;
 
-					if (y == MinBorderY && doSewing)
+					if (_y == MinBorderY && doSewing)
 					{
-						X = Tangent * ((x + 1) * StepSize - HalfSize + OffsetX);
+						X = Tangent * ((_x + 1) * StepSize - HalfSize + OffsetX);
 					}
-					else if (y == MaxBorderY && doSewing)
+					else if (_y == MaxBorderY && doSewing)
 					{
-						X = Tangent * ((x - 1) * StepSize - HalfSize + OffsetX);
+						X = Tangent * ((_x - 1) * StepSize - HalfSize + OffsetX);
 					}
 					else
 					{
-						X = Tangent * (x * StepSize - HalfSize + OffsetX);
+						X = Tangent * (_x * StepSize - HalfSize + OffsetX);
 					}
 				}
 				else
 				{
-					Y = BiTangent * (y * StepSize - HalfSize + OffsetY);
-					X = Tangent * (x * StepSize - HalfSize + OffsetX);
+					Y = BiTangent * (_y * StepSize - HalfSize + OffsetY);
+					X = Tangent * (_x * StepSize - HalfSize + OffsetX);
 				}
 
 				if (FlatWorld)
 				{
-
 					Data.Vertices.Add(DVector(X + Y).ToFVector());
 				}
 				else
@@ -181,7 +183,7 @@ static void ProcessVertices(LodData& Data, int32 MinY, int32 MinX, int32 MaxY, i
 				}
 
 				Data.Normals.Add(FVector(0.0f, 0.0f, 1.0f));
-				Data.UV.Add(FVector2D((x + (int32)SubPosition.X) * uvSpacing, (y + (int32)SubPosition.Y) * uvSpacing));
+				Data.UV.Add(FVector2D((_x + (int32)SubPosition.X) * uvSpacing, (_y + (int32)SubPosition.Y) * uvSpacing));
 				Data.Tangents.Add(FWorldScapeMeshTangent(Tangent.X, Tangent.Y, Tangent.Z));
 			}
 		}

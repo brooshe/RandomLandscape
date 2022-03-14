@@ -407,9 +407,20 @@ void ColisionGeneration::SetPointPosition()
 	MaxBorderX = TriResolution - 2;
 	MinBorderY = 0;
 	MaxBorderY = TriResolution - 2;
-
+	
+	int32 WorldMinX, WorldMinY;
+	int32 WorldMaxX, WorldMaxY;
+	WorldMinX = WorldMinY = -65536;
+	WorldMaxX = WorldMaxY = 65536;
+	if (bFlatWorld && RootRef->WorldSize > 0)
+	{
+		WorldMinX = floor((-RootRef->WorldSize*0.5f + HalfSize - OffsetX - RelativePosition.X) / StepSize);
+		WorldMinY = floor((-RootRef->WorldSize*0.5f + HalfSize - OffsetY - RelativePosition.Y) / StepSize);
+		WorldMaxX = ceil((RootRef->WorldSize*0.5f + HalfSize - OffsetX - RelativePosition.X) / StepSize);
+		WorldMaxY = ceil((RootRef->WorldSize*0.5f + HalfSize - OffsetY - RelativePosition.Y) / StepSize);
+	}
 
 	ProcessVertices(MainPatch, 0, 0, TriResolution - 2, TriResolution - 2, Tangent, BiTangent, StepSize, HalfSize, uvSpacing, SubPosition,
-		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld, false);
+		MinBorderY, MinBorderX, MaxBorderY, MaxBorderX, WorldMinY, WorldMinX, WorldMaxY, WorldMaxX, OffsetX, OffsetY, InvertOrder, PlanetScaleCode, RelativePosition, bFlatWorld, false);
 }
 
