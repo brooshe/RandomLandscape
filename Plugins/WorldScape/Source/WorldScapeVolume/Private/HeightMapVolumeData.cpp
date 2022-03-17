@@ -113,32 +113,51 @@ void UHeightMapVolumeData::BuildTexture()
 
 	if (HighQuality)
 	{
-
-		FFloat16Color* FormatedImageDataLinear = static_cast<FFloat16Color*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
-
-		FVector4 Value, Average;
-		float AverageCount = 0.0f;
-
-		
-		if (FormatedImageDataLinear != nullptr && (FormatedImageDataLinear + (Width * Height)-1) != nullptr )
+		if (HeightMapOnly)
 		{
-			for (int i = 0; i < Width * Height; i++)
+			UINT16* FormatedImageDataLinear = static_cast<UINT16*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
+
+			if (FormatedImageDataLinear != nullptr && (FormatedImageDataLinear + (Width * Height) - 1) != nullptr)
 			{
-				Value = FVector4(FormatedImageDataLinear[i].R, FormatedImageDataLinear[i].G, FormatedImageDataLinear[i].B, FormatedImageDataLinear[i].A);
-				SampledHeightMap.Add(Value.X);
-				SampledTemperature.Add(Value.Y);
-				SampledHumidity.Add(Value.Z);
-				SampledHeightMapAlpha.Add(Value.W);
+				for (int i = 0; i < Width * Height; i++)
+				{
+					SampledHeightMap.Add((FormatedImageDataLinear[i] - 32768)/32768.f);
+				}
+			}
+			else
+			{
+				//Texture is in 8bit;
+				HighQuality = false;
+				BuildTexture();
+				return;
 			}
 		}
 		else
 		{
-			//Texture is in 8bit;
-			HighQuality = false;
-			BuildTexture();
-			return;
+			FFloat16Color* FormatedImageDataLinear = static_cast<FFloat16Color*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
+    
+    		FVector4 Value, Average;
+    		float AverageCount = 0.0f;
+    		
+    		if (FormatedImageDataLinear != nullptr && (FormatedImageDataLinear + (Width * Height)-1) != nullptr )
+    		{
+    			for (int i = 0; i < Width * Height; i++)
+    			{
+    				Value = FVector4(FormatedImageDataLinear[i].R, FormatedImageDataLinear[i].G, FormatedImageDataLinear[i].B, FormatedImageDataLinear[i].A);
+    				SampledHeightMap.Add(Value.X);
+    				SampledTemperature.Add(Value.Y);
+    				SampledHumidity.Add(Value.Z);
+    				SampledHeightMapAlpha.Add(Value.W);
+    			}
+    		}
+    		else
+    		{
+    			//Texture is in 8bit;
+    			HighQuality = false;
+    			BuildTexture();
+    			return;
+    		}		
 		}
-
 	}
 	else {
 			FColor* FormatedImageData = static_cast<FColor*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));

@@ -37,6 +37,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Texture", meta = (ExposeOnSpawn = true))
 		UTexture2D* HeightMapOcean;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "TextureInfo", meta = (ExposeOnSpawn = true))
+	bool HeightMapOnly;
+	
 	//Is the texture 16bit ?
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "TextureInfo", meta = (ExposeOnSpawn = true))
 		bool HighQuality;
