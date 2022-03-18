@@ -8,8 +8,8 @@
 UHeightMapVolumeData::UHeightMapVolumeData() {
 
 	HighQuality = true;
-	OceanHighQuality = true;
-
+	OceanHighQuality = false;
+	HeightMapOnly = true;
 }
 #if WITH_EDITOR
 void UHeightMapVolumeData::CleanData()
@@ -115,7 +115,7 @@ void UHeightMapVolumeData::BuildTexture()
 	{
 		if (HeightMapOnly)
 		{
-			UINT16* FormatedImageDataLinear = static_cast<UINT16*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
+			const UINT16* FormatedImageDataLinear = static_cast<UINT16*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
 
 			if (FormatedImageDataLinear != nullptr && (FormatedImageDataLinear + (Width * Height) - 1) != nullptr)
 			{
