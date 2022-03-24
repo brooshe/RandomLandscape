@@ -12,9 +12,11 @@ float FlatLandBiome::GetNoise(CustomNoise NoiseClass, FVector position)
 {
 	return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
 }
-float FlatLandBiome::GetMask(CustomNoise NoiseClass, FVector position)
+float FlatLandBiome::GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise)
 {
-	return 1.f;
+	//total flatland inside 500, not flatland outside 600, smooth from 500 ~ 600
+	return 1.f - FMath::SmoothStep(50000.f, 60000.f,position.Size2D());
+	// return 1.f;
 }
 
 
@@ -22,7 +24,7 @@ float HighLandBiome::GetNoise(CustomNoise NoiseClass, FVector position)
 {
 	return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
 }
-float HighLandBiome::GetMask(CustomNoise NoiseClass, FVector position)
+float HighLandBiome::GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise)
 {
 	return 0.f;
 }
@@ -32,25 +34,28 @@ float SwampBiome::GetNoise(CustomNoise NoiseClass, FVector position)
 {
 	return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
 }
-float SwampBiome::GetMask(CustomNoise NoiseClass, FVector position)
+float SwampBiome::GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise)
 {
 	return 0.f;
 }
 
 float SnowMountainBiome::GetNoise(CustomNoise NoiseClass, FVector position)
 {
-	return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
+	float hill = 0.85 * NoiseClass.Fractal(position * 3.5f, 5, 2.75, 0.48f) + 0.15 * NoiseClass.FractalRidge(position * 3.5f, 3, 2.5);
+	float Mountain = powf(NoiseClass.FractalRidge(position * 0.55f, 5, 2.5), 4.5) * 2;
+	return NoiseMathUtils::SmoothMax(hill, Mountain, 0.05f) * 0.075f + 0.01f;
+	// return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
 }
-float SnowMountainBiome::GetMask(CustomNoise NoiseClass, FVector position)
+float SnowMountainBiome::GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise)
 {
-	return 0.f;
+	return FMath::SmoothStep(40000.f, 60000.f, position.Y) * NoiseMathUtils::Clamp01(powf(NoiseClass.Fractal(WarpedPosition * 0.0041543, 7, 3, 0.4f) * 1.35f, 3));
 }
 
 float DesertBiome::GetNoise(CustomNoise NoiseClass, FVector position)
 {
 	return NoiseClass.Fractal(position * 2.5f, 5, 2.75, 0.48f);
 }
-float DesertBiome::GetMask(CustomNoise NoiseClass, FVector position)
+float DesertBiome::GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise)
 {
 	return 0.f;
 }
@@ -83,35 +88,41 @@ FNoiseData UShanhaiNoise::GetHeight(CustomNoise NoiseClass, FVector position, FV
 	//Adding a bit of fractal noise to get Nice Continent
 	LandMassNoise = NoiseClass.Fractal(WarpedPosition * 0.001f * NoiseParameters->LandMassScale, 6, 4.f, 0.30f) * 1.5f;
 
-	const float FlatLandMask = NoiseMathUtils::Clamp01(FlatLandBiome::GetMask(NoiseClass, position));
-	if (FlatLandMask > 0)
+	const float FlatLandMask = NoiseMathUtils::Clamp01(FlatLandBiome::GetMask(NoiseClass, position, WarpedPosition, LandMassNoise));
+	// if (FlatLandMask > 0)
 	{
-		Data.HeightNormalize += FlatLandMask * FlatLandBiome::GetNoise(NoiseClass, WarpedPosition) * NoiseParameters->FlatLandIntensity;
+		Data.HeightNormalize += /*FlatLandMask */ (FlatLandBiome::GetNoise(NoiseClass, WarpedPosition*NoiseParameters->FlatLandScale) * GeneralNoise * NoiseParameters->FlatLandIntensity + 0.002f * powf(LandMassNoise, 0.25f));
 	}
 
-	const float HighLandMask = NoiseMathUtils::Clamp01(HighLandBiome::GetMask(NoiseClass, position));
+	const float HighLandMask = NoiseMathUtils::Clamp01(HighLandBiome::GetMask(NoiseClass, position, WarpedPosition, LandMassNoise));
 	if (HighLandMask > 0)
 	{
-		Data.HeightNormalize += HighLandMask * HighLandBiome::GetNoise(NoiseClass, WarpedPosition) * NoiseParameters->HighLandIntensity;
+		Data.HeightNormalize += HighLandMask * HighLandBiome::GetNoise(NoiseClass, WarpedPosition*NoiseParameters->HighLandScale) * GeneralNoise * NoiseParameters->HighLandIntensity;
 	}
 
-	const float SwampMask = NoiseMathUtils::Clamp01(SwampBiome::GetMask(NoiseClass, position));
+	const float SwampMask = NoiseMathUtils::Clamp01(SwampBiome::GetMask(NoiseClass, position, WarpedPosition, LandMassNoise));
 	if (SwampMask > 0)
 	{
-		Data.HeightNormalize += SwampMask * SwampBiome::GetNoise(NoiseClass, WarpedPosition) * NoiseParameters->SwampIntensity;
+		Data.HeightNormalize += SwampMask * SwampBiome::GetNoise(NoiseClass, WarpedPosition*NoiseParameters->SwampScale) * GeneralNoise * NoiseParameters->SwampIntensity;
 	}
 
-	const float SnowMountainMask = NoiseMathUtils::Clamp01(SnowMountainBiome::GetMask(NoiseClass, position));
+	const float SnowMountainMask = NoiseMathUtils::Clamp01(SnowMountainBiome::GetMask(NoiseClass, position, WarpedPosition, LandMassNoise));
 	if (SnowMountainMask > 0)
 	{
-		Data.HeightNormalize += SnowMountainMask * SnowMountainBiome::GetNoise(NoiseClass, WarpedPosition) * NoiseParameters->SnowMountainIntensity;
+		double noise = SnowMountainBiome::GetNoise(NoiseClass, WarpedPosition*NoiseParameters->SnowMountainScale) * GeneralNoise * NoiseParameters->SnowMountainIntensity + 0.005f * powf(LandMassNoise, 0.25f);
+		Data.HeightNormalize = FMath::Lerp(Data.HeightNormalize, noise, SnowMountainMask);
 	}
+	Data.HeightNormalize = SnowMountainMask;
 
-	const float DesertMask = NoiseMathUtils::Clamp01(DesertBiome::GetMask(NoiseClass, position));
+	const float DesertMask = NoiseMathUtils::Clamp01(DesertBiome::GetMask(NoiseClass, position, WarpedPosition, LandMassNoise));
 	if (DesertMask > 0)
 	{
-		Data.HeightNormalize += DesertMask * DesertBiome::GetNoise(NoiseClass, WarpedPosition) * NoiseParameters->DesertIntensity;
+		Data.HeightNormalize += DesertMask * DesertBiome::GetNoise(NoiseClass, WarpedPosition*NoiseParameters->DesertScale) * GeneralNoise * NoiseParameters->DesertIntensity;
 	}
+
+	const float TotalMask = FlatLandMask + HighLandMask + SwampMask + SnowMountainMask + DesertMask;
+	// if(TotalMask > 1.f)
+	// 	Data.HeightNormalize /= TotalMask;
 	return Data;
 }
 

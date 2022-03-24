@@ -41,18 +41,28 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | PinYuan")
 	float FlatLandIntensity;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | PinYuan")
+	float FlatLandScale;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | ZhaoZe")
 	float SwampIntensity;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | ZhaoZe")
+	float SwampScale;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | XueShan")
 	float SnowMountainIntensity;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | XueShan")
+	float SnowMountainScale;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | GaoYuan")
 	float HighLandIntensity;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | GaoYuan")
+	float HighLandScale;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | ShaMo")
 	float DesertIntensity;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Biome | ShaMo")
+	float DesertScale;
 
 };
 
@@ -61,31 +71,31 @@ public:
 class FlatLandBiome : BiomeNoise {
 public:
 	static float GetNoise(CustomNoise NoiseClass, FVector position);
-	static float GetMask(CustomNoise NoiseClass, FVector position);
+	static float GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise);
 };
 
 class SwampBiome : BiomeNoise {
 public:
 	static float GetNoise(CustomNoise NoiseClass, FVector position);
-	static float GetMask(CustomNoise NoiseClass, FVector position);
+	static float GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise);
 };
 
 class HighLandBiome : BiomeNoise {
 public:
 	static float GetNoise(CustomNoise NoiseClass, FVector position);
-	static float GetMask(CustomNoise NoiseClass, FVector position);
+	static float GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise);
 };
 
 class SnowMountainBiome : BiomeNoise {
 public:
 	static float GetNoise(CustomNoise NoiseClass, FVector position);
-	static float GetMask(CustomNoise NoiseClass, FVector position);
+	static float GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise);
 };
 
 class DesertBiome : BiomeNoise {
 public:
 	static float GetNoise(CustomNoise NoiseClass, FVector position);
-	static float GetMask(CustomNoise NoiseClass, FVector position);
+	static float GetMask(CustomNoise NoiseClass, FVector position, FVector WarpedPosition, float LandMassNoise);
 };
 
 UCLASS()
