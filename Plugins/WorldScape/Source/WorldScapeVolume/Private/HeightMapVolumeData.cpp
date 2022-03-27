@@ -115,7 +115,7 @@ void UHeightMapVolumeData::BuildTexture()
 	{
 		if (HeightMapOnly)
 		{
-			const UINT16* FormatedImageDataLinear = static_cast<UINT16*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
+			const uint16* FormatedImageDataLinear = static_cast<uint16*>(HeightMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_ONLY));
 
 			if (FormatedImageDataLinear != nullptr && (FormatedImageDataLinear + (Width * Height) - 1) != nullptr)
 			{

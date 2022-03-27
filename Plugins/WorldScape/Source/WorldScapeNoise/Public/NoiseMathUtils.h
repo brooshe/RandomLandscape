@@ -10,5 +10,5 @@ public :
 	static float SmoothMax(const float& a, const float& b, float k);
 	static float SmoothStep(float x);
 	static double DClamp(double a, double min = 0, double max = 1);
-
+    static float LerpStep(const float& a, const float& b, const float& k);
 };

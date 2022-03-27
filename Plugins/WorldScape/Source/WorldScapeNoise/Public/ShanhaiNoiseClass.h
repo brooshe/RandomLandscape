@@ -112,6 +112,7 @@ public:
 
 
 	FNoiseData GetHeight(CustomNoise NoiseClass, FVector position, FVector PlanetPosition, float NoiseScale, float NoiseIntensity, float PlanetScale, bool FlatWorld, float lattitude, FVector& NoisePosition, double& LandMassNoise);
+	float GetBaseHeight(FVector2D position);
 	UShanhaiNoise();
 };
 

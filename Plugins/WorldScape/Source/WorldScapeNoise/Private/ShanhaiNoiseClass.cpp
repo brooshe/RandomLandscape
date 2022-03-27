@@ -2,6 +2,7 @@
 
 #include "ShanhaiNoiseClass.h" 
 
+const float MinMountainDistance = 1000.f;
 
 UShanhaiNoiseParameter::UShanhaiNoiseParameter()
 {
@@ -123,6 +124,7 @@ FNoiseData UShanhaiNoise::GetHeight(CustomNoise NoiseClass, FVector position, FV
 	const float TotalMask = FlatLandMask + HighLandMask + SwampMask + SnowMountainMask + DesertMask;
 	// if(TotalMask > 1.f)
 	// 	Data.HeightNormalize /= TotalMask;
+	Data.HeightNormalize = GetBaseHeight(FVector2D(position.X, position.Y));
 	return Data;
 }
 
@@ -156,4 +158,31 @@ FNoiseData UShanhaiNoise::GetOceanNoise(CustomNoise NoiseClass, FVector position
 UShanhaiNoise::UShanhaiNoise()
 {
 	NoiseParameters = CreateDefaultSubobject<UShanhaiNoiseParameter>(TEXT("Noise Parameters"));
+}
+
+float UShanhaiNoise::GetBaseHeight(FVector2D position)
+{
+    position *= 0.01f; //cm to m
+    float distance = position.Size();
+    const float x = position.X;
+    const float y = position.Y;
+    float height = 0.f;
+    height += FMath::PerlinNoise2D(position * 0.002f * 0.5f) * FMath::PerlinNoise2D(position * 0.003f * 0.5f) * 1.f;
+    height += FMath::PerlinNoise2D(position * 0.002f * 1.f) * FMath::PerlinNoise2D(position * 0.003f * 1.f) * height * 0.9f;
+    height += FMath::PerlinNoise2D(position * 0.005f * 1.f) * FMath::PerlinNoise2D(position * 0.01f * 1.f) * height * 0.5f;
+    height -= 0.07f;
+    
+    float neighbor0 = FMath::PerlinNoise2D(FVector2D(x*0.002f*0.25f+0.123f, y*0.002*0.25f+0.15123f));
+    float neighbor1 = FMath::PerlinNoise2D(FVector2D(x*0.002f*0.25f+0.321f, y*0.002*0.25f+0.231f));
+    float alpha = 1.f - NoiseMathUtils::LerpStep(0.02f, 0.12f, FMath::Abs(neighbor0 - neighbor1));
+    alpha *= FMath::SmoothStep(744.f, 1000.f, distance);
+    height *= 1.f - alpha;
+    if (distance < MinMountainDistance && height > 0.28f)
+    {
+    	float t = NoiseMathUtils::Clamp01((height - 0.28f) / 0.099999994f);
+    	height = FMath::Lerp(FMath::Lerp(0.28f, 0.38f, t), height, NoiseMathUtils::LerpStep(MinMountainDistance - 400.f, MinMountainDistance, distance));
+    }
+    
+    return height;
+
 }

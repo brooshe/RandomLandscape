@@ -61,3 +61,9 @@ double NoiseMathUtils::DClamp(double a, double min, double max)
 		return min;
 	return a;
 }
+
+
+float NoiseMathUtils::LerpStep(const float& a, const float& b, const float& k)
+{
+    return Clamp01((k - a)/(b - a));
+}
